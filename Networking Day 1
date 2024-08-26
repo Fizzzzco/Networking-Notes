@@ -4,14 +4,363 @@ OSI Model
 Layers - Layer Name - Protocol Data Unit
 
 Layer 7 - Application - Uses Data
+Telnet - TCP PORT 23
+  Remote Lgoin
+  Authentication
+  Clear Text
+  Credentials susceptible to interception
+
+SSH - TCP PORT 22
+    Messages provide:
+     Client/server authentication
+     Asymmetric or PKI for key exchange
+     Symmetric for session
+     User authentication
+     Data stream channeling
+        Some Options
+          -p {port} - Alternate port
+          -l {username} - Specify the username
+          -X - Enable X11 forwarding
+          -v(vv) - Add logging and debugging
+          -i {identity file} - Specify a private key identity
+          -F {config file} - Specify an alternate user config file
+          -N - Do not send remote commands
+          -T - Do not create a pseudo vty
+          -C - Enable compression
+          -f - Backgroud process after authentication
+          -J user@host - Proxy jump
+          -L [bind_address:]port:host:hostport
+          -R [bind_address:]port:host:hostport
+          -D {port}
+
+HTTP(S) - HTTP = TCP Port 80, HTTPS = TCP Port 443
+
+    User Request methods
+        GET / HEAD / POST / PUT
+
+    Server response Codes
+        100, 200, 300, 400, 500
+
+DNS - TCP/UDP Port 53 (UDP for Queries and Responses)
+  DNS Query/Response
+    Resolves Names to IP addresses
+    Queries and responses use UDP
+    DNS response larger than 512 bytes use TCP
+        DNS Zone Transfer
+        DNS Security
+  DNS Records
+    A - IPv4 record
+    AAAA - IPv6 record
+    MX - Mail Server record
+    TXT - Human-readable text
+    NS - Name Server record
+    SOA - Start of Authority
+
+FTP - TCP Port 20/21
+  Port 21 open for Control
+  Port 20 only open during data transfer
+  Authentication or Anonymous
+  Clear Text
+  Modes:
+     Active (default)
+        Active Issues
+            NAT and Firewall traversal issues
+            Complications with tunneling through SSH
+            Passive FTP solves issues related to Active mode and is most often used in modern systems
+     Passive
+
+TFTP - UDP Port 69
+    Clear-Text
+    Reliability provided at Application layer
+    Used by routers and switches to transfer IOS and config files
+
+SMTP - TCP Port 25
+    Used to send email
+    No encryption
+    SMTP over TLS/SSL (SMTPS)
+        TCP Ports 587 and 465
+
+POP - TCP Port 110
+    Receives email
+    No sync with server
+    No encryption
+    POP3
+
+IMAP - TCP Port 143
+    Receives email
+    Sync with server
+    No encryption
+    IMAP4
+
+DHCP - UDP Port 67/68
+  DHCPv4
+      DORA
+        Discover (Broadcast)
+        Offer (Unicast)
+        Request (Broadcast)
+        Acknowlege (Unicast)
+  DHCPv6
+      If Managed flag is set during SLAAC:
+        Solicit (Multicast)
+        Advertise (Unicast)
+        Request or Information Request (Multicast)
+        Reply (Unicast)
+
+NTP - UDP Port 123
+    Stratum 0 - authoritative time source
+    Up to Stratum 15
+    Vulnerable to crafted packet injection
+
+TACACS - TCP Port 49
+
+Radius - UDP Ports 1645/1646 and 1812/1813
+
+Diameter - TCP Port 3868
+
+SNMP - UDP Ports 161/162
+    Versions:
+        SNMPv1 - RFC 1157
+        SNMPv2c - RFC 1441
+        SNMPv3 - RFC 3410
+    7 Message Types
+        Get Request
+        Set Request
+        Get Next
+        Get Bulk
+        Response
+        Trap
+        Inform
+    Vulnerabilities
+        v1 and 2c
+          Weak Community Strings
+          Lack of Encryption
+          Information Disclosure
+          Can be "sniffed"
+
+RTP - Any UDP Port above 1023
+
+RDP - TCP Port 3389
+    Developed by Microsoft (Open Standard)
+        No server software needed
+    Other Proprietary RDP software
+        Requires to have 3rd pary software installed
+
+Kerberos - UDP Port 88
+    Secure network authentication protocol
+    Clients obtain tickets to access services
+    Mutual authentication
+    Used by Active Directory
+
+LDAP(S) - TCP Ports 389 abd 636
+    Client/server model
+    Hierarchical
+    Directory schema
+    Unsecure and secure versions
+_________________________________________________________________________________________________________________________________
 
 Layer 6 - Presentation - Uses Data
+Deals with Translation, Formating, ncoding, Encryption, and Compression
+_________________________________________________________________________________________________________________________________
 
 Layer 5 - Session - Uses Data
+VPN
+      Types:
+        Remote Access(client-to-site)
+        Site-to-Site
 
+IPSec
+    Modes: Transport or Tunnel
+    Headers:
+        ESP (protocol 50)
+        AH (protocol 51)
+        IKE (UDP port 500 or 4500)
+
+NETBIOS
+    TCP 139 and UDP 137/138
+    Name Resolution (15 characters)
+    Largely replaced by DNS
+
+SMB/CIFS
+SMB Rides over Netbios
+    Netbios Dgram Service - UDP 138
+    Netbios Session Service - TCP 139
+    SAMBA and CIFS are just flavors of SMB
+
+RPC - can be used on any port
+    Allows a program to execute a request on a local/remote computer
+    Hides network complexities
+    XML, JSON, SOAP, and gRPC
+    User application will:
+        Request for information from external server
+        Receives the information from the external server
+        Display collected data to User
+
+API
+    Framework of rules and protocols for software components to interact.
+    Methods, parameters, and data formats for requests and responses.
+    REST and SOAP
+_________________________________________________________________________________________________________________________________
 Layer 4 - Transport - Uses Segment/Datagram
+Protocols
+  Connection-Oriented
+    TCP - Segments
+    Unicasr Traffic
+  Connection-less
+    UDP - Datagrams
+    Broadcast,Multicast, or Unicast Traffic
 
+Port ranges
+  0-1023: Well-Known (System)
+  1024-49151: Registered (User)
+  41952-65535: Dynamic (Private)
+
+TCP Options
+    0 - End of Options
+    1 - No Options (NOP)
+    2 - Maximum Segment Size (MSS)
+    3 - TCP Windows Scaling
+    4 - Selective ACK (SACK) Permitted
+    5 - SACK
+    8 - TCP Timestamps
+
+_________________________________________________________________________________________________________________________________
 Layer 3 - Network - Uses Packets
+Deals with:
+  Addressing Schemes for Network
+  Routing
+  Encapsulations
+  IP Fragmentation and Reassembly
+  Error Handling and Diagnostics
+
+Internet Protocol Versions
+IPv4 (ARPANET 1982)
+  Classful subnetting
+  Classless subnetting(CIDR)
+  NAT
+IPv6 (Standardized 2017)
+
+IP Classes
+A: 0-127
+B: 128-191
+C: 192-223
+D: 224-239 - Multicasting
+E: 240-255 - Experimental/Not used
+
+IPv4 Address Scopes
+  Public
+  Private (RFC 1918)
+  Loopback (127.0.0.0/8)
+  Link-Local (APIPA)
+  Multicast (Class D)
+
+IPv4 Packet
+  Contains Version,IHL,DSCP,ECN,Total Length, Identification, Flags, Fragment Offset, TTL, Protocol, Header Checksum, Source IP, Dst IP, options (Only if IHL > 5)
+
+IPv4 Fragmentation
+    Breaking up packets from higher MTU to lower MTU network
+    Performed by routers
+    MF flag is on from 1st until 2nd to last
+    Offset is on from 2nd until the last
+    Offset = (MTU - (IHL x 4)) ÷ 8
+
+
+OS Fingerprinting
+  Linux - 64
+  Windows - 128
+  Cisco - 255
+
+IPv4 Auti Config
+APIPA
+  Will give an unknown IP an address of 16.254.0.0/16
+ uses RFC 3927
+DHCP
+  Will give an unkown IP an addres via DORA process
+  uses RFC 1531
+
+ICMPv4 Header
+Contains a Type,Code,Checsum, and ICMP specific message
+
+SOme ICMPv4 Types
+0 - Echo Reply
+3 - Destination Unreachable
+5 - Redirect Message
+8 -  Echo Request
+11 -  Time exceeded
+
+ICMPv4 TraceRoute
+    Identifies hops between the source and destination
+    Uses incrementing TTLs
+    Hops return an ICMP Type 11 Time exceeded message when TTL reaches zero
+    Continues until it reaches target or 30 hops*
+
+    Can use various protocols and ports
+        ICMP (windows default)
+        UDP (linux default)
+        TCP
+
+IPv6 Addressing
+    Represented with Hex Digits
+    128 bit address
+    64-bit Prefix (4 hextets)
+    64-bit Interface ID (4 hextets)
+    340 undecillian addresses
+    Can Shorten Consecutive 0's with ::, can only be used once
+Types:
+  Unicast, Multicast,Anycast
+
+IPv6 Address Scopes
+    Global Unicast Addresses (2000::/3)
+    Unique Local (fc00::/7)
+    Loopback (::1/128)
+    Link-Local (fe80::/10)
+    Multicast (ff00::/8)
+
+IPv6 Zero Configuration
+  Host Requires global prefix
+    SLAAC
+    DHCPv6
+  Interface ID can be:
+    EUI-64
+    Random
+    
+
+IPv6 Fragmentation 
+    IPv6 does not support fragmentation within it’s header
+    Routers do not fragment IPv6 packets
+    Source adjusts MTU to avoid fragmentation
+    Source can use IPv6 fragmentation extension header
+
+Neighbor Discovery Protocol
+    Router Solicitation (Type 133)
+    Router Advertisement (Type 134)
+    Neighbor Solicitation (Type 135)
+    Neighbor Advertisement (Type 136)
+    Redirect (Type 137)
+
+BGP - Border Gateway Protocol
+    Road-map of the Internet
+    Routes traffic between Autonomous System (AS) Number
+    Advertises IP CIDR address blocks
+    Establishes Peer relationships
+    Complicated configuration
+    Complicated and slow path selection
+
+BGP Operation
+    How BGP chooses the best path:
+        Advertise a more specific route. 192.168.1.0 /24 is more specific than 192.168.0.0 /16.
+        Offer a shorter route to certain blocks of IP addresses.
+        A route to ip prefix with 4 AS 'hops" is better than route with 5 AS 'hops'
+
+BGP Hijack Defense
+    IP prefix filtering
+
+    BGP hijacking detection
+        Tracking the change in TTL of incoming packets
+        Increased Round Trip Time (RTT) which increases latency
+        Monitoring misdirected traffic (change in AS path from tools like Looking Glass)
+
+    BGPSec
+
 
 _________________________________________________________________________________________________________________________________
 Layer 2 - Data Link - Uses Frames
@@ -38,6 +387,11 @@ CDP,FDP,LLDP
 Cisco Discovery Protocol
 Foundry Discovery Protocol
 Link Layer Discovery Protocol
+
+Port Security Mode
+Shutdown
+Protect
+Restrict
 
 Frame Headers
   Ethernet Header
@@ -73,6 +427,20 @@ MAC - Medium Access Control
       All bits on
   
 LLC - Logical Link Control
+
+Attack Mitigation
+  Shutdown Unused ports
+  Enable Port Security
+  IP Source Guard
+  Manually assign STP root
+  BPDU Guard
+  DHCP Snooping
+  802.1x
+  Dynamic ARP Insection
+  Static CAM entries
+  Static ARP entries
+  Disable DTP negotiations
+  Manually assign Access/Trunk ports
 ______________________________________________________________________________________________________________________________________
 Layer 1 - Physical - Uses Bit
 
