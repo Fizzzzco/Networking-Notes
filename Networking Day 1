@@ -1,0 +1,107 @@
+NITH-M-006
+
+OSI Model
+Layers - Layer Name - Protocol Data Unit
+
+Layer 7 - Application - Uses Data
+
+Layer 6 - Presentation - Uses Data
+
+Layer 5 - Session - Uses Data
+
+Layer 4 - Transport - Uses Segment/Datagram
+
+Layer 3 - Network - Uses Packets
+
+_________________________________________________________________________________________________________________________________
+Layer 2 - Data Link - Uses Frames
+LAN Technologies (IEEE Standards)
+Ethernet 802.3
+Wireless 802.11
+Token Ring 802.5
+
+VLAN Types
+  Default - VLAN 1
+  Data - User Traffic
+  Voice - VOIP traffic
+  Management - Switch and router management
+  Native - Untagged switch and router traffic
+VLAN Trunking Protocol (VTP)
+
+Dynamic Trunking Protocol(DTP)
+  Cisco Proprietary protocol
+  2 Modes
+  Dynamic-Auto - Will automatically look for trunking and change if needed
+  Dynamic-Desirable 
+
+CDP,FDP,LLDP
+Cisco Discovery Protocol
+Foundry Discovery Protocol
+Link Layer Discovery Protocol
+
+Frame Headers
+  Ethernet Header
+    MAC Header
+      Contains Destination MAC (First 6 bytes), Source MAC (Second 6 bytes), and Ethertype (Last 2 bytes)
+                                                                      0800 - IPv4, 0806 - ARP, 86DD - IPv6, 8100 VLAN Tag
+  ARP Header
+    In order the header reads
+      Hardware type, protocol type, Hardware Address Length, Protocol Address Length, Operation, Sender HW addressm Sender Protocoll Address, Target HW address, Tgt Protocol Address
+  ARP Type
+    ARP (OP 1 and 2_
+    RARP (Reverse Arp)[OP 3 and 4]
+    Proxy ARP (OP 2)
+    Gratuitous ARP (OP 2)
+
+  802.1Q Header
+    Same as Mac header above, however it adds 4 bytes (VLAN TAG) between the source mac and ethertype. Starts with 8100
+  802.1D Header
+    Same as 802.1Q, however it adds another VLAN Tag between the source and another VLAN tag. This new tag starts with 88A8
+
+Sub Layers
+MAC - Medium Access Control
+    2 parts of a MAC
+    OUI - First 24-bits Specified by IANA
+    NIC - Last 24-bits specified by Vendor
+
+  Address Types
+    Unicast: One to One
+      8th bit is off
+    Multicast: One to many
+      8th bit is on
+    Broadcast: One to all
+      All bits on
+  
+LLC - Logical Link Control
+______________________________________________________________________________________________________________________________________
+Layer 1 - Physical - Uses Bit
+
+Contains Binary, Decimal, Hex, or even Base64
+1 Hex digit is 1 nibble or 4 bits
+Base64 uses (A-Z,a-z,0-9,+,/) (Uses = for a null valuse indicator)
+
+Devices
+Hubs
+Repeaters - Pushes information further
+
+Switches - Prevent Excessive Traffic
+    Builds a MAC/CAM Table - CAM is Content Addressable Memory
+      Learns by reading Source MAC addresses
+    Forwards Frames
+      Based on destination MAC Address
+  Operation Modes:
+    Cut-Through/Fast-forward: Only forwards to the destination
+    Fragment-Free: Will read atleast 64 bytes of a message nefore forwarding
+    Store-and-Forward: Accepts, and Analyzes message before forwarding
+
+  CAM Table Overflow Attacks
+    Frames are sent with fake MAC addresses to a switch. These address fill the table until no new MAC's can be learned.
+
+Routers - Allow networks to communicate via routing tables.
+___________________________
+Organizations
+IETF (Internet Engineering Task Force) - RFC's
+
+IANA (Internet assigned numbers authority) - Internet Numbers
+
+IEEE (Institue of Electrical and Electronic Engineers) - LAN/WAN electrical standards
