@@ -1,0 +1,189 @@
+Student#: student17
+Command: ssh student@10.50.32.60 -X
+Password: password
+
+Traffic Captures
+
+Socket Types
+    User Space Sockets
+        Stream socket - TCP
+        Datagram socket - UDP
+    Kernel Space Sockets
+        RAW Sockets
+
+Types of Sniffinf
+  Active - While observing traffic, you also send data.
+  Passive - Only observing traffic
+______________________________________________________________
+TCPDump
+
+User friendly capture expressions
+    src or dst
+    host or net
+    tcp or udp
+
+Primitive Qualifiers
+    type - the 'kind of thing' that the id name or number refers to
+        host, net, port, or portrange
+    dir - transfer direction to and/or from
+        src or dst
+    proto - restricts the match to a particular protocol(s)
+        ether, arp, ip, ip6, icmp, tcp, or udp
+
+Options
+    -A = print payload in ASCII
+    -D = list interfaces
+    -i = specify capture interface
+    -e = print data-link headers
+    -X or XX = print payload in HEX and ASCII
+    -w = write to pcap
+    -r = read from pcap
+    -v, vv, or vvv = verbosity
+    -n = no inverse lookups
+
+Logical Operators
+    Primitives may be combined using:
+        Concatenation: 'and' ( && )
+        Alteration: 'or' ( || )
+        Negation: 'not' ( ! )
+
+Relational Operators
+    < or < =
+    > or >=
+    = or == or !=
+______________________________________________________________
+
+Berkley Packet Filter
+    Similar in function to primitives
+    Reduces redudant computations
+    More complex expressions
+
+Primitives vs BPF
+    Primitives (macros)
+        CMU/Stanford Packet Filter (CSPF) Model commonly called Boolean Expression Tree
+        Simple and easy filter expressions
+        First user-level packet filter model
+        Memory-stack-based filter machine which can create bottlenecks on model CPUs
+        can have redundant computations of the same information
+
+    Berkley Packet Filters (BPF)
+        Control Flow Graph (CFG) Model
+        Uses a simple (non-shared) buffer model which can make it 1.5 to 20 times faster than CSPF
+        Can be more complex to create expressions but offer far more precision
+
+
+
+Data Link searches
+'ether[0:4] = 0xffffffff && ether[4:2] = 0xffff' - searches for destination broadcast mac
+
+'ether[0] & 0x01 = 0x00'
+'ether[0] & 0x01 = 0x01'
+'ether[6] & 0x01 = 0x00'
+'ether[6] & 0x01 = 0x01' 
+^Searches for unicast and multicast address^
+
+ether[12:2] = 0x0800 - IPv4
+ether[12:2] = 0x0806 - ARP
+ether[12:2] = 0x8100 - VLAN Tag
+ether[12:2] = 0x86dd - IPv6
+
+'ether[12:2] = 0x8100 && ether[16:2] = 0x8100' - Double VLAN tag
+
+Network Layer
+Search for only the RES flag
+'ip[6] & 0xE0 = 0x80'  
+'ip[6] & 224 = 128'
+
+Searches for RES bit to be on, other flags can be on or off
+'ip[6] & 0x80 = 0x80'  
+'ip[6] & 128 = 128'
+
+Only searches for DF flag
+'ip[6] & 0xE0 = 0x40' 
+'ip[6] & 224 = 64'
+
+Search for DF bit set, 2 other flags can be on or off
+'ip[6] & 0x40 = 0x40
+'ip[6] & 64 = 64'
+
+
+Only searches for MF flag
+'ip[6] & 0xe0 = 0x20'
+'ip[6] & 224 = 32'
+
+Search for MF bit set, 2 other flags can be on or off
+'ip[6] & 0x20 = 0x20'
+'ip[6] & 32 = 32'
+
+Offset field having a value greater than 0
+'ip[6:2] & 0x1fff > 0'
+'ip[6:2] & 8191 > 0'
+
+MF set, or offset field having a value greater than 0
+'ip[6] & 0x20 = 0x20 || ip[6:2] & 0x1fff > 0'
+'ip[6] & 32 = 32 || ip[6:2] & 8191 > 0'
+
+TTL Searches
+'ip[8] = 128' 
+'ip[8] < 128'
+'ip[8] >= 128'
+'ip6[7] = 128'
+'ip6[7] < 128'
+'ip6[7] >= 128'
+
+ICMPv4, TCP, UDP searches
+'ip[9] = 0x01'
+'ip[9] = 0x06'
+'ip[9] = 0x11'
+'ip6[6] = 0x3A'
+'ip6[6] = 0x06'
+'ip6[6] = 0x11'
+
+
+Searching for a src or dst ip of 10.1.1.1
+'ip[12:4] = 0x0a010101'
+'ip[16:4] = 0x0a010101'
+
+Search for ipv6 src or dst ip starting with FE80
+'ip6[8:2] = 0xfe80'
+'ip6[24:2] = 0xfe80'
+______________________________________________________________
+Transport Layer
+
+Search for TCP src/dst port 3389
+'tcp[0:2] = 3389' - src
+'tcp[2:2] = 3389' - dst
+
+Search for SYNACK
+'tcp[13] = 0x12'
+
+Searches for SYN, SYNACK, ACK
+'tcp[13] & 0x12 != 0'
+'tcp[13] & 0x12 > 0'
+
+p0f
+
+p0f -i (Used on an interface)
+p0f -r (Used on a pcap)
+
+-o will write it to a log file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
