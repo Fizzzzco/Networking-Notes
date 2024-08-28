@@ -1,0 +1,100 @@
+Socket Types
+  Stream Sockets - Connection oriented and sequenced; methods for connection establishment and tear-down. Used with TCP, SCTP, and Bluetooth.
+  Datagram Sockets - Connectionless; designed for quickly sending and receiving data. Used with UDP.
+  RAW Sockets - Direct sending and receiving of IP packets without automatic protocol-specific formatting.
+
+User vs Kernel Space
+-User
+    Stream Sockets
+    Datagram
+    Does not need more permissions during use
+-Kernel
+    Raw Sockets
+    Requires higher permissions to use. Will need to be used with a sudo command
+
+User Applications/Sockets
+    Using tcpdump or wireshark to read a file
+    Using nmap with no switches
+    Using netcat to connect to a listener
+    Using netcat to create a listener above the well known port range (1024+)
+    Using /dev/tcp or /dev/udp to transmit data
+    
+
+Kernel Apps/Sockets
+    Using tcpdump or wireshark to capture packets on the wire
+    Using nmap for OS identification or to set specific flags when scanning
+    Using netcat to create a listener in the well known port range (0 - 1023)
+    Using Scapy to craft or modify a packet for transmission
+    Using Python to craft or modify RAW Sockets for transmission
+    Network devices using routing protocols such as OSPF
+    Any Traffic without Transport Header (ICMP)
+
+Soccket functions
+family: AF_INET* - IPv4 , AF_INET6 - IPv6, AF_UNIX
+type: SOCK_STREAM*, SOCK_DGRAM, SOCK_RAW
+proto: 0*, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_IP, IPPROTO_ICMP, IPPROTO_RAW
+
+Stream Socket demo 1
+#!/usr/bin/python3
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0) < 0 is optional in this example
+ip_addr = '127.0.0.1'
+port = 1111
+s.connect((ip_addr, port))
+message = b"Message" < b turns the text into a byte format for the machine to read
+s.send(message)
+data, conn = s.recvfrom(1024)
+print(data.decode('utf-8')) < utf-8 is the default decode format for .decode
+s.close()
+
+  nc -lp 1111 to open up the port on a separate terminal, running the script will print message within that nc terminal.
+
+Dgram Socket demo
+#!/usr/bin/python3
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+ip_addr = '127.0.0.1'
+port = 2222
+message = b"Message"
+s.sendto(message, (ip_addr, port)) < Unlike a stream socket, a connection is not made to the port, and we are just send the message
+data, addr = s.recvfrom(1024)
+print(data.decode()) < utf-8 is the default decode, there is also no close command because it is a UDP connection.
+
+
+Raw Socket Demo - See example in machine
+TCP Raw Socket - See example in machine
+
+Encoding/Decoding
+    Encoding
+        The process of taking bits and converting them using a specified cipher.
+    Decoding
+        Reverse of the conversion process used by the specified cipher for encoding.
+    Common encoding schemes
+        UTF-8, Base64, Hex
+    Encryption - scrambles data to make it unreadable without a secret key
+
+Hex Encoding/Decoding
+echo "Message" | xxd - Will encode text to hex
+xxd file.txt file-encoded.txt - Will encode a file to hex and put it in a new file
+xxd -r file-encoded.txt file-decoded.txt - Will decode a hex file and put it into a new file
+
+In Python
+import binascii
+message = b'Message'
+hidden_msg = binascii.hexlify(message)
+
+Base64 Encoding/Decoding
+echo "Message" | base64 - Will encode text to Base64
+base64 file.txt > file-encoded.txt - Will encode a file to Base64
+base64 -d file-encoded.txt > file-decoded.txt - Will decode a file from Base64
+
+In Python
+import base64
+message = b'Message'
+hidden_msg = base64.b64encode(message)
+
+
+MD5Sum Encoding
+echo "Message" | md5sum - Will Encrpt text into md5sum
+
+
