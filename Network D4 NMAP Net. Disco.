@@ -1,0 +1,276 @@
+Service and Network Discovery
+Net. Recon Stages
+    Passive External
+    Active External
+    Passive Internal
+    Active Internal
+_______________________________________________________________________________
+Net. Recon Steps
+  Network Footprinting
+    Collect information relating to target
+      Network
+      Systems
+      Organization
+
+  Network Scanning
+    Port Scanning
+    Network Scanning
+    Vulnerability Scanning
+
+  Network Enumeration
+    Network Resource and shares
+    Users and Groups
+    Routing tables
+    Auditing and Service settings
+    Machine names
+    Applications and banners
+    SNMP and DNS details
+    Other common services and ports
+
+  Vulnerability Assessment
+    Injection
+    Broken Authentication
+    Sensitive Data Exposure
+    XML External Entities
+    Broken Access Control
+    Security Misconfiguration
+    Software/Components with Known Vulnerabilities
+_________________________________________________________
+Passive External Recon Activities
+Dig vs Whois
+    Whois - queries DNS registrar over TCP port 43
+        Information about the owner who registered the domain
+    Dig - queries DNS server over UDP port 53
+        Name to IP records
+        example input: dig zonetransfer.me A [Queries server based off A record.]
+        Zone transfer example: dir axfr {@soa.server} {target-site} ----> dig axfr @nsztm1.digi.ninja zonetransfer.me
+
+
+    Open-Source Intelligence (OSINT) 
+    Publicly Available Information (PAI)
+
+    IP Addresses and Sub-domains
+    Identifying External/3rd Party sites
+    Identifying People
+    Identifying Technologies
+    Identifying Content of Interest
+    Identifying Vulnerabilities
+
+    DNS Lookups:
+        arin.net
+        whois.domaintools.com
+        viewdns.info
+        dnsdumpster.com
+        centralops.net
+
+3RD Party Sites
+    Parent/Subordinate organizations
+    Clients/Customers
+    Service organizations
+    Partners
+
+Identifying People
+    Target website
+    Crawler tools like Maltego or Creepy
+    Search engines
+    Social Media
+    Job Portals
+    Tracking active emails
+    Family Tree
+
+Identifying Technologies
+    File extensions
+    Server responses
+    Job listing
+    Website content
+    Google Hacking
+    Shodan.io
+    MAC OUI Lookup
+
+Identifying Content of Interest
+    /etc/passwd and /etc/shadow or SAM database
+    Configuration files
+    Log files
+    Backup files
+    Test pages
+    Client-side code
+
+Identifying Vulernabilities
+    Known Technologies
+    Error messages responses
+    Identify running services
+    Identify running OS
+    Monitor running Applications
+_________________________________________________________
+Active External Recon Activities
+Scanning Nature
+  Active and Passive
+    Strategies
+      Remote to Local
+      Local to Remote
+      Local to Local
+      Remote to Remote
+
+Vertial Scan - Scan ports on a single target
+Horizontal Scan - Scan multiple targets for a single port
+Strobe Scan - Scan predefined subnet of ports on a range of targets
+Block Scan - Scan all or a range of port on targets
+
+Ping
+    Ping one IP:
+      ping 172.16.82.106 -c 1
+    Ping a range(aka ping sweep):
+      for i in {1..254}; do (ping -c 1 172.16.82.$i | grep "bytes from" &) ; done
+
+NMAP
+    Default Scan:
+        User: TCP Full Connect Scan (-sT)
+        Root: TCP SYN Scan (-sS)
+
+    Default Ports scanned: 1000 most commonly used TCP or UDP ports
+
+  Port States
+    open
+    closed
+    filtered
+    unfiltered
+    open|filtered
+    closed|filtered
+
+Scan Types
+    Broadcast Ping/Ping sweep (-sP, -PE)
+    SYN scan (-sS)
+    Full connect scan (-sT)
+    Null scan (-sN)
+    FIN scan (-sF)
+    XMAS tree scan (-sX)
+    UDP scan (-sU)
+    Idle scan (-sI)
+    Decoy scan (-D)
+    ACK/Window scan (-sA)
+    RPC scan (-sR)
+    FTP scan (-b)
+    OS fingerprinting scan (-O)
+    Version scan (-sV)
+
+Scan options
+  -PE - ICMP Ping
+  -Pn - No Ping
+
+NMAP Time out
+    -T0 - Paranoid - 300 Sec
+    -T1 - Sneaky - 15 Sec
+    -T2 - Polite - 1 Sec
+    -T3 - Normal - 1 Sec
+    -T4 - Aggresive - 500 ms
+    -T5 - Insane - 250 ms
+
+NMAP Delay
+    --scan-delay <time> - Minimum delay between probes
+    --max-scan-delay <time> - Max delay between probes
+
+NMAP Rate Limit
+    --min-rate <number> - Minimum packets per second
+    --max-rate <number> - Max packets per second
+
+Traceroute Firewalking
+traceroute 172.16.82.106 - domain name also works in this scenario
+traceroute 172.16.82.106 -p 123
+sudo traceroute 172.16.82.106 -I
+sudo traceroute 172.16.82.106 -T
+sudo traceroute 172.16.82.106 -T -p 443
+
+Netcat Scanning
+Example input - nc [Options] [Target IP] [Target Port(s)]
+Options
+-z : Port scanning mode i.e. zero I/O mode
+-v : Be verbose [use twice -vv to be more verbose]
+-n : do not resolve ip addresses
+-w1 : Set time out value to 1
+-u : To switch to UDP 
+
+Netcat Banner Grabbing
+nc [Target IP] [Target Port] - Add -u before TGT IP to do UDP search
+
+Curl and Wget
+  Both can be used to interact with the HTTP, HTTPS and FTP protocols.
+    Curl - Displays ASCII
+      Example - curl http://172.16.82.106 OR curl ftp://172.16.82.106
+
+    Wget - Downloads (-r recursive) 
+      Example - wget -r http://172.16.82.10 OR wget -r ftp://172.16.82.106 < with login information
+_________________________________________________________
+Passive Internal
+IP Configuration
+Windows: ipconfig /all
+Linux: ip address (ifconfig depreciated)
+VyOS: show interface
+
+DNS Configuration
+Windows: ipconfig /displaydns
+Linux: cat /etc/resolv.conf
+
+ARP Cache
+Windows: arp -a
+Linux: ip neighbor (arp -a depreciated)
+
+Network Connections
+Windows: netstat
+Linux: ss (netstat depreciated)
+
+OS Info
+Windows: systeminfo
+Linux: uname -a and /etc/os-release
+
+Routing Table 
+Windows: route print
+Linux: ip route (netstat -r deprecated)
+VyOS: show ip route
+
+File Search
+find / -name hint* 2> /dev/null
+find / -iname flag* 2> /dev/null
+
+
+_________________________________________________________
+Active Internal
+ARP Scanning
+arp-scan --interface=eth0 --localnet
+nmap -sP -PR 172.16.82.96/27
+
+Ping scanninf - See prior command
+
+Dev TCP Banner Grab
+exec 3<>/dev/tcp/172.16.82.106/22; echo -e "" >&3; cat <&3
+
+Dev TCP Scanning
+for p in {1..1023}; do(echo >/dev/tcp/172.16.82.106/$p) >/dev/null 2>&1 && echo "$p open"; done
+
+Mapping
+    Device type (Router/host)
+    System Host-names
+    Interface names (eth0, eth1, etc)
+    IP address and CIDRs for all interfaces
+    TCP and UDP ports
+    MAC Address
+    OS type/version
+    Known credentials
+
+
+SSgt Marks Methodology
+
+Host Discovery:
+  Ping sweep(See above) if available
+  If no Ping, use Nmap Scan
+
+Pors
+
+
+
+
+
+
+
+
+
+
