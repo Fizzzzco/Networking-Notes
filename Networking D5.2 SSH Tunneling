@@ -199,6 +199,12 @@ Internet_Host:
 telnet localhost 5523
 
 
+MAKING A FORWARD BACK TO A REMOTE
+first local: ssh name@IP/Localhost -L 21701:IP:23 -NT
+telnet onto the host
+remote: ssh name@IP [-p IS REQUIRED IF SSH HAS A DIFFERENT PORT NUMBER] -R 21799:localhost:8976 -NT
+local back: ssh name@IP/localhost[-p REQUIRED IF YOU HAVE TO REACH THROUGH A TUNNEL TO CONNECT] -L 21702:localhost:21799
+
 
 
 
